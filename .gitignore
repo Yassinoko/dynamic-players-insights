@@ -1,6 +1,6 @@
 # Don't want to push big csv files
 *.csv
-data/
+raw_data/
 .DS_Store
 .python-version
 
