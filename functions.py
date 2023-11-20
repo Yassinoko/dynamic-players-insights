@@ -14,5 +14,5 @@ def player_name_list_preprocessing(player_list):
         preprocessed_list.append(player)
     return preprocessed_list
 
-
-# ok
+def say_hello_to_nickolay():
+    print("Hi Nickolay")
