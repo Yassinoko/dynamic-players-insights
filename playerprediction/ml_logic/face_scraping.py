@@ -21,7 +21,7 @@ from selenium import webdriver
 #         preprocessed_list.append(player)
 #     return preprocessed_list
 
-     
+
 def download_images(player_name):
     # Create a directory to save the images
     player_folder_path = f"./raw_data/faces/{player_name}"
@@ -61,9 +61,9 @@ def download_images(player_name):
     finally:
         # Close the browser
         driver.quit()
-        
 
-        
+
+
 """ IMAGE SCRAPING """
 
 # # import key_stats file
