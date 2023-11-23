@@ -16,7 +16,7 @@ def lowercase_strings(data):
 
 # Creating the new unique keys
 def new_keys(data):
-    data['key'] = data['player_name'] + '_' + data['club'] + '_' + data['position']
+    data['player_id'] = data['player_name'] + '_' + data['club'] + '_' + data['position']
     data.set_index('key', inplace=True)
     return data
 
