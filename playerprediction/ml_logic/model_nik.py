@@ -7,7 +7,7 @@ import os
 import matplotlib.pyplot as ple
 from get_images import get_players_images
 
-""" 55% accuracy when training on high-quality image 
+""" 55% recall when training on high-quality image 
 and testing on a blurr images 
 
 STARTS FROM face_recognition_model, LINE 58
