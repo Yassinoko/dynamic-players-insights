@@ -7,8 +7,11 @@ from tqdm import tqdm
 from get_images import get_players_images
 
 
-def processing_images():
-    img_label_dict = get_players_images()
+def processing_images(img_label_dict): # img_label_dict from get_images.py file
+    
+    """ This function takes the dictionary (from get_images.py), preprocess 
+each image and label (class) and returns 2 separate variables: 
+prepocessed images and labels, which can then be used as X and y """
         
     shapes = [img.shape for img in list(img_label_dict['image'])]
     
@@ -34,11 +37,11 @@ def processing_images():
     print(shapes.index((418, 612)))
 
     preprocessed_labels = img_label_dict['name']
-    del total_labels[shapes.index((408, 612))]
-    del total_labels[shapes.index((418, 612))]
+    del preprocessed_labels[shapes.index((408, 612))]
+    del preprocessed_labels[shapes.index((418, 612))]
     
     return preprocessed_img, preprocessed_labels
     
     
-preprocessed_img, preprocessed_labels = processing_images()
-print('success')
+# preprocessed_img, preprocessed_labels = processing_images(get_players_images())
+# print('success')
