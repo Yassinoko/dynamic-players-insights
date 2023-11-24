@@ -50,6 +50,5 @@ Labels need to be preprocessed by class_preprocessing.py """
 
     return preprocessed_img, total_labels
 
-
 # preprocessed_img, preprocessed_labels = processing_images(get_players_images())
 # print('success')
