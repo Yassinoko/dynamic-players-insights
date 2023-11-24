@@ -16,7 +16,6 @@ __pycache__/
 *.db
 *.sqlite
 
-
 # Distribution / packaging
 .Python
 build/
