@@ -1,5 +1,8 @@
 import streamlit as st
 import os
+import tensorflow as tf
+from lib.video_processing import get_cropped_image_dict, save_frames_at_fps_cropped
+from data_processing.image_preprocessing import processing_images
 
 # Define emoji variables
 soccer_emoji = '\u26BD'
@@ -45,3 +48,23 @@ if video is not None:
     video_file = open(file_path, 'rb')
     video_bytes = video_file.read()
     st.video(video_bytes)
+
+video_paths = "/Users/yassinebouaine/code/Yassinoko/dynamic-players-insights/uploaded_videos/Clip_test.mp4"
+dir_path = "/Users/yassinebouaine/code/Yassinoko/dynamic-players-insights/uploaded_videos"
+
+# Save the face of the first player detected in the video in image format
+frame = save_frames_at_fps_cropped(video_paths, dir_path, "picture")
+print(frame)
+
+# Convert the image to an array, ready to be processed
+frame_in_array = get_cropped_image_dict(frame)
+
+# Processing the image. [0] because there is no label as this is what needs to be predicted
+X_new = processing_images(frame_in_array)[0]
+print(X_new)
+
+# Loading the model
+model = tf.keras.models.load_model("lib/model.keras")
+
+# Predicting the label
+prediction = model.predict(X_new)
