@@ -3,6 +3,8 @@ import numpy as np
 from PIL import Image
 import face_recognition
 import matplotlib.pyplot
+from sklearn.preprocessing import LabelEncoder
+from keras.utils import to_categorical
 
 faces_folder = "../../data_processing/raw_data/faces/"
 cropped_faces_directory = "../../data_processing/raw_data/cropped_faces"
@@ -91,3 +93,9 @@ def encode(directory):
     players = np.array(players)
 
     return labels, players
+
+
+def to_cat(y) :
+    label_encoder = LabelEncoder()
+    y_encoded = label_encoder.fit_transform(y)
+    return to_categorical(y_encoded)
