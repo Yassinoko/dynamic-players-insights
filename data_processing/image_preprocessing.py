@@ -34,10 +34,14 @@ Labels need to be preprocessed by class_preprocessing.py """
 
     preprocessed_img = np.array(preprocessed_img)
 
-    print(shapes.index((408, 612)))
-    print(shapes.index((418, 612)))
+    try:
+        print(shapes.index((408, 612)))
+        print(shapes.index((418, 612)))
+    except:
+        pass
 
     total_labels = img_label_dict['name']
+    
     try:
         del total_labels[shapes.index((408, 612))]
         del total_labels[shapes.index((418, 612))]
