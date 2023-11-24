@@ -41,7 +41,7 @@ Labels need to be preprocessed by class_preprocessing.py """
         pass
 
     total_labels = img_label_dict['name']
-    
+
     try:
         del total_labels[shapes.index((408, 612))]
         del total_labels[shapes.index((418, 612))]

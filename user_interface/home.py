@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import tensorflow as tf
 from lib.video_processing import get_cropped_image_dict, save_frames_at_fps_cropped
-from data_processing.image_preprocessing import processing_images
+from ml_models.data_library.image_preprocessing import processing_images
 
 # Define emoji variables
 soccer_emoji = '\u26BD'

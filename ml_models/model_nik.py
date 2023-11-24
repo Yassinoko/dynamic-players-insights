@@ -5,7 +5,7 @@ import cv2
 import matplotlib.pyplot as plt
 import os
 import matplotlib.pyplot as ple
-from data_processing.get_images import get_players_images
+from ml_models.data_library.get_images import get_players_images
 
 """ 55% recall when training on high-quality image
 and testing on a blurr images

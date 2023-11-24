@@ -6,9 +6,9 @@ from keras.layers import Dense, GlobalAveragePooling2D
 from keras.models import Model
 
 # Importing data functions
-from data_processing.get_images import get_players_images_cropped
-from data_processing.image_preprocessing import processing_images
-from data_processing.class_preprocessing import preprocessing_classes
+from ml_models.data_library.get_images import get_players_images_cropped
+from ml_models.data_library.image_preprocessing import processing_images
+from ml_models.data_library.class_preprocessing import preprocessing_classes
 
 # Importing preprocessing functions
 from sklearn.model_selection import train_test_split

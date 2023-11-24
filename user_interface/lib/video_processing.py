@@ -5,7 +5,7 @@ import pandas as pd
 from PIL import Image
 import numpy as np
 import face_recognition
-from data_processing.get_images import crop
+from ml_models.data_library.get_images import crop
 
 # load key_stats into notebook
 key_stats = pd.read_csv("raw_data/stats/key_stats.csv")
