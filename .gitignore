@@ -1,7 +1,8 @@
 # Don't want to push big csv files
 *.csv
 *.jpg
-playerprediction/user_interface/raw_data/
+*.keras
+data_processing/raw_data/
 .DS_Store
 .python-version
 

@@ -5,10 +5,10 @@ import cv2
 import matplotlib.pyplot as plt
 import os
 import matplotlib.pyplot as ple
-from get_images import get_players_images
+from data_processing.get_images import get_players_images
 
-""" 55% recall when training on high-quality image 
-and testing on a blurr images 
+""" 55% recall when training on high-quality image
+and testing on a blurr images
 
 STARTS FROM face_recognition_model, LINE 58
 
@@ -19,13 +19,13 @@ PUT YOUR DETECTED FACE (ARRAY!!!!) INTO THAT FUNCTION AND YOU WILL GET THE NAME 
 def train_model():
     directory_path = "../../raw_data/faces"
     img_folders = os.listdir(directory_path)
-    
+
     shorten_img_folders = []
 
     for folder in img_folders:
         if 'Real Madrid' in folder or 'Chelsea' in folder:
             shorten_img_folders.append(folder)
-    
+
     img_label_dict = {'encoded_face': [], 'label': []}
     labels = [folder for folder in shorten_img_folders]
 
@@ -52,27 +52,23 @@ def train_model():
         except:
             print('Empty folder')
 
-        
+
     train_data = pd.DataFrame(img_label_dict)
     return train_data
 
 
 def face_recognition_model(test_image): # passing image into function
-    
+
     train_data = train_model()
-    
+
     test_image_encoded = np.array(fg.face_encodings(test_image))
-    
+
     ind = 0
     for train_image in list(train_data['encoded_face']):
         if fg.compare_faces([train_image], test_image_encoded)[0]:
             return ' '.join(train_data['label'][ind].replace('Man.', '').replace('Real', '').split()[:-1])
         ind += 1
-    
-    
+
+
 
 # print(face_recognition_model(fg.load_image_file('../../raw_data/faces/Benzema Real Madrid/Benzema Real Madrid_1.jpg')))
-
-    
-    
-  
