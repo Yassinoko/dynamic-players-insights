@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from keras.layers import Resizing
 from tqdm import tqdm
-from data_processing.get_images import get_players_images
+# from data_processing.get_images import get_players_images
 
 
 def processing_images(img_label_dict): # img_label_dict from get_images.py file
@@ -38,8 +38,11 @@ Labels need to be preprocessed by class_preprocessing.py """
     print(shapes.index((418, 612)))
 
     total_labels = img_label_dict['name']
-    del total_labels[shapes.index((408, 612))]
-    del total_labels[shapes.index((418, 612))]
+    try:
+        del total_labels[shapes.index((408, 612))]
+        del total_labels[shapes.index((418, 612))]
+    except:
+        pass
 
     return preprocessed_img, total_labels
 
