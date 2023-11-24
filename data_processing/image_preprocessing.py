@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from keras.layers import Resizing
 from tqdm import tqdm
+from PIL import Image 
 # from data_processing.get_images import get_players_images
 
 
@@ -25,14 +26,18 @@ Labels need to be preprocessed by class_preprocessing.py """
     resize = Resizing(height, width)
 
     preprocessed_img = []
-
+    print(len(img_label_dict['image']))
     for img in tqdm(img_label_dict['image']):
-        try:
-            preprocessed_img.append(resize(img))
-        except:
-            pass
+        # try:
+        img = Image.fromarray(img)
+        img_resize = np.asarray(img.resize((129, 129)))
+        preprocessed_img.append(img_resize)
+#         except:
+            
+#             pass
 
     preprocessed_img = np.array(preprocessed_img)
+    print(preprocessed_img.shape)
 
     try:
         print(shapes.index((408, 612)))
