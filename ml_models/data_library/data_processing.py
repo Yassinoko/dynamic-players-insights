@@ -99,3 +99,13 @@ def to_cat(y) :
     label_encoder = LabelEncoder()
     y_encoded = label_encoder.fit_transform(y)
     return to_categorical(y_encoded)
+
+
+def convert_to_grayscale_and_resize(images):
+    grayscale_resized_images = []
+    for img in images:
+        # Convert to grayscale and resize to 64x64
+        img = Image.fromarray(img).convert('L').resize((64, 64))
+        img_array = np.array(img)[:, :, np.newaxis]  # Add a third dimension
+        grayscale_resized_images.append(img_array)
+    return grayscale_resized_images
