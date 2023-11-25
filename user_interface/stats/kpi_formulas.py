@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-df_attacking = pd.read_csv('raw_data/stats/attacking.csv')
+df_attacking = pd.read_csv('../../data_processing/raw_data/stats/attacking.csv')
 df_attempts = pd.read_csv('raw_data/stats/attempts.csv')
 df_defending = pd.read_csv('raw_data/stats/defending.csv')
 df_disciplinary = pd.read_csv('raw_data/stats/disciplinary.csv')
