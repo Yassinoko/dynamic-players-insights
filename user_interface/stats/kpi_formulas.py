@@ -11,99 +11,222 @@ df_distributon = pd.read_csv('raw_data/stats/distributon.csv')
 df_goalkeeping = pd.read_csv('raw_data/stats/goalkeeping.csv')
 df_goals = pd.read_csv('raw_data/stats/goals.csv')
 df_key_stats = pd.read_csv('raw_data/stats/key_stats.csv')
+#     general = general(player_id)
+
+#     if df_key_stats[df_key_stats["player_id"] == player_id]["position"] == "Goalkeeper" :
+#         kpi = goalkeeper(player_id)
+
+#     if df_key_stats[df_key_stats["player_id"] == player_id]["position"] == "Defender" :
+#         kpi = defender(player_id)
+
+#     if df_key_stats[df_key_stats["player_id"] == player_id]["position"] == "Midfielder" :
+#         kpi = midfielder(player_id)
+
+#     if df_key_stats[df_key_stats["player_id"] == player_id]["position"] == "Forward" :
+#         kpi = forward(player_id)
+
+#     return general, kpi
 
 
-def goalkeeper(player_id) :
+def forward(player_name):
+    player_name = player_name.lower()
     # Creating KPIs
-    saved_goalkeeper = round(df_goalkeeping[df_goalkeeping['player_id'] == player_id]['saved'].sum(),2)
-    conceded_goalkeeper = round(df_goalkeeping[df_goalkeeping['player_id'] == player_id]['conceded'].sum(),2)
-    freekicks_taken_goalkeeper = round(df_distributon[df_distributon['player_id'] == player_id]['freekicks_taken'].sum(),2)
-    saved_penalties_goalkeeper = round(df_goalkeeping[df_goalkeeping['player_id'] == player_id]['saved_penalties'].sum(),2)
-    cleansheets_goalkeeper = round(df_goalkeeping[df_goalkeeping['player_id'] == player_id]['cleansheets'].sum(),2)
+    goals_forward = df_goals[df_goals['player_name'].str.lower() == player_name]['goals'].sum()
+    goals_forwardpergame = np.nan_to_num(round(
+        goals_forward / np.where(
+            df_attempts[df_attempts['player_name'].str.lower() == player_name]['match_played'].sum() == 0,
+            1,
+            df_attempts[df_attempts['player_name'].str.lower() == player_name]['match_played'].sum()
+        ),
+        2
+    ))
 
-    # Storing KPIs in a dictionary
-    output_goalkeeper = {
-        "Saved goals" : saved_goalkeeper,
-        "Conceded goals" : conceded_goalkeeper,
-        "Freekicks" : freekicks_taken_goalkeeper,
-        "Saved penalties" : saved_penalties_goalkeeper,
-        "Cleansheets" : cleansheets_goalkeeper}
+    assists_forward = df_attacking[df_attacking['player_name'].str.lower() == player_name]['assists'].sum()
+    assists_forwardpergame = np.nan_to_num(round(
+        assists_forward / np.where(
+            df_attempts[df_attempts['player_name'].str.lower() == player_name]['match_played'].sum() == 0,
+            1,
+            df_attempts[df_attempts['player_name'].str.lower() == player_name]['match_played'].sum()
+        ),
+        2
+    ))
 
-    return output_goalkeeper
+    shots_on_target_forward = df_attempts[df_attempts['player_name'].str.lower() == player_name]['on_target'].sum()
+    shots_on_target_pergame_forward = np.nan_to_num(round(
+        shots_on_target_forward / np.where(
+            df_attempts[df_attempts['player_name'].str.lower() == player_name]['match_played'].sum() == 0,
+            1,
+            df_attempts[df_attempts['player_name'].str.lower() == player_name]['match_played'].sum()
+        ),
+        2
+    ))
 
-def forward(player_id) :
-    # Creating KPIs
-    goals_forward = round(df_goals[df_goals['player_id'] == player_id]['goals'].sum(),2)
-    goals_forwardpergame = round(df_goals[df_goals['player_id'] == player_id]['goals'].sum() / df_attempts[df_attempts['player_id'] == player_id]['match_played'].sum(),2)
-    assists_forward = round(df_attacking[df_attacking['player_id'] == player_id]['assists'].sum(),2)
-    assists_forwardpergame = round(df_attacking[df_attacking['player_id'] == player_id]['assists'].sum() / df_attempts[df_attempts['player_id'] == player_id]['match_played'].sum(),2)
-    shots_on_target_forward = round(df_attempts[df_attempts['player_id'] == player_id]['on_target'].sum(),2)
-    shots_on_target_pergame_forward = round(df_attempts[df_attempts['player_id'] == player_id]['on_target'].sum() / df_attempts[df_attempts['player_id'] == player_id]['match_played'].sum(),2)
-    successful_dribbles_forward = round(df_attacking[df_attacking['player_id'] == player_id]['dribbles'].sum(),2)
+    successful_dribbles_forward = df_attacking[df_attacking['player_name'].str.lower() == player_name]['dribbles'].sum()
 
     # Storing KPIs in a dictionary
     output_forward = {
-        "Total goals" : goals_forward,
-        "Goals per game" : goals_forwardpergame,
-        "Total assists" : assists_forward,
-        "Assists per game" : assists_forwardpergame,
-        "Shots on target" : shots_on_target_forward,
-        "Shots on target per game" : shots_on_target_pergame_forward,
-        "Successful dribbles" : successful_dribbles_forward}
+        "Total goals": goals_forward,
+        "Goals per game": goals_forwardpergame,
+        "Total assists": assists_forward,
+        "Assists per game": assists_forwardpergame,
+        "Shots on target": shots_on_target_forward,
+        "Shots on target per game": shots_on_target_pergame_forward,
+        "Successful dribbles": successful_dribbles_forward
+    }
 
     return output_forward
 
-def midfielder(player_id) :
+def midfielder(player_name):
+    player_name = player_name.lower()
     # Creating KPIs
-    ball_recoveries_midfielder = round(df_defending[df_defending['player_id'] == player_id]['balls_recoverd'].sum() / df_defending[df_defending['player_id'] == player_id]['match_played'].sum(),2)
-    pass_accuracy_midfielder = round(df_distributon[df_distributon['player_id'] == player_id]['pass_accuracy'].mean(),2)
-    total_assists_midfielder = round(df_attacking[df_attacking['player_id'] == player_id]['assists'].sum(),2)
-    key_passes_pergame_midfielder = round(total_assists_midfielder / df_attacking[df_attacking['player_id'] == player_id]['match_played'].sum(),2)
+    ball_recoveries_midfielder = np.nan_to_num(round(
+        df_defending[df_defending['player_name'].str.lower() == player_name]['balls_recoverd'].sum() / np.where(
+            df_defending[df_defending['player_name'].str.lower() == player_name]['match_played'].sum() == 0,
+            1,
+            df_defending[df_defending['player_name'].str.lower() == player_name]['match_played'].sum()
+        ),
+        2
+    ))
+
+    pass_accuracy_midfielder = np.nan_to_num(round(
+        df_distributon[df_distributon['player_name'].str.lower() == player_name]['pass_accuracy'].mean(),
+        2
+    ))
+
+    total_assists_midfielder = df_attacking[df_attacking['player_name'].str.lower() == player_name]['assists'].sum()
+    key_passes_pergame_midfielder = np.nan_to_num(round(
+        total_assists_midfielder / np.where(
+            df_attacking[df_attacking['player_name'].str.lower() == player_name]['match_played'].sum() == 0,
+            1,
+            df_attacking[df_attacking['player_name'].str.lower() == player_name]['match_played'].sum()
+        ),
+        2
+    ))
 
     # Storing KPIs in a dictionary
     output_midfielder = {
         'Total assists': total_assists_midfielder,
         'Ball Recoveries per Game': ball_recoveries_midfielder,
         'Pass Accuracy': pass_accuracy_midfielder,
-        'Key passes per game': key_passes_pergame_midfielder,
-        }
+        'Key passes per game': key_passes_pergame_midfielder
+    }
 
     return output_midfielder
 
-def defender(player_id) :
+def defender(player_name):
+    player_name = player_name.lower()
     # Creating KPIs
-    tackles_won_defender = round(df_defending[df_defending['player_id'] == player_id]['t_won'].sum(),2)
-    tackles_won_pergame_defender = round(df_defending[df_defending['player_id'] == player_id]['t_won'].sum() / df_defending[df_defending['player_id'] == player_id]['match_played'].sum(),2)
-    fouls_pergame_defender = round(df_disciplinary[df_disciplinary['player_id'] == player_id]['fouls_committed'].sum() / df_defending[df_defending['player_id'] == player_id]['match_played'].sum(),2)
+    tackles_won_defender = round(
+        df_defending[df_defending['player_name'].str.lower() == player_name]['t_won'].sum(),
+        2
+    )
+
+    matches_played = df_defending[df_defending['player_name'].str.lower() == player_name]['match_played'].sum()
+    tackles_won_pergame_defender = np.nan_to_num(round(
+        df_defending[df_defending['player_name'].str.lower() == player_name]['t_won'].sum() / np.where(
+            matches_played == 0,
+            1,
+            matches_played
+        ),
+        2
+    ))
+
+    fouls_pergame_defender = np.nan_to_num(round(
+        df_disciplinary[df_disciplinary['player_name'].str.lower() == player_name]['fouls_committed'].sum() / np.where(
+            matches_played == 0,
+            1,
+            matches_played
+        ),
+        2
+    ))
 
     # Storing KPIs in a dictionary
     output_defender = {
-            'Tackles Won' : tackles_won_defender,
-            'Tackles Won per Game': tackles_won_pergame_defender,
-            'Fouls Committed per Game': fouls_pergame_defender,
-        }
+        'Tackles Won': tackles_won_defender,
+        'Tackles Won per Game': tackles_won_pergame_defender,
+        'Fouls Committed per Game': fouls_pergame_defender
+    }
 
     return output_defender
 
-def general(player_id) :
+def goalkeeper(player_name):
+    player_name = player_name.lower()
     # Creating KPIs
-    red_yellow_cards_total = df_disciplinary[df_disciplinary['player_id'] == player_id][['red', 'yellow']].sum().to_dict()
+    saved_goalkeeper = round(
+        df_goalkeeping[df_goalkeeping['player_name'].str.lower() == player_name]['saved'].sum(),
+        2
+    )
+
+    conceded_goalkeeper = round(
+        df_goalkeeping[df_goalkeeping['player_name'].str.lower() == player_name]['conceded'].sum(),
+        2
+    )
+
+    freekicks_taken_goalkeeper = round(
+        df_distributon[df_distributon['player_name'].str.lower() == player_name]['freekicks_taken'].sum(),
+        2
+    )
+
+    saved_penalties_goalkeeper = round(
+        df_goalkeeping[df_goalkeeping['player_name'].str.lower() == player_name]['saved_penalties'].sum(),
+        2
+    )
+
+    cleansheets_goalkeeper = round(
+        df_goalkeeping[df_goalkeeping['player_name'].str.lower() == player_name]['cleansheets'].sum(),
+        2
+    )
+
+    # Storing KPIs in a dictionary
+    output_goalkeeper = {
+        "Saved goals": saved_goalkeeper,
+        "Conceded goals": conceded_goalkeeper,
+        "Freekicks": freekicks_taken_goalkeeper,
+        "Saved penalties": saved_penalties_goalkeeper,
+        "Cleansheets": cleansheets_goalkeeper
+    }
+
+    return output_goalkeeper
+
+def general(player_name):
+    # Creating KPIs
+    player_name = player_name.lower()
+    disciplinary_data = df_disciplinary[df_disciplinary['player_name'].str.lower() == player_name][['red', 'yellow']]
+    red_yellow_cards_total = disciplinary_data.sum().to_dict()
+
+    # Handling potential NaN values
+    for key in red_yellow_cards_total:
+        red_yellow_cards_total[key] = 0 if np.isnan(red_yellow_cards_total[key]) else red_yellow_cards_total[key]
+
     return red_yellow_cards_total
 
+def building_kpis(player_name):
+    player_name_lower = player_name.lower()
+    player_position = df_key_stats[df_key_stats["player_name"].str.lower() == player_name_lower]["position"].iloc[0]
 
-def building_kpis(player_id) :
-    general = general(player_id)
+    if player_position == "Goalkeeper":
+        kpi = goalkeeper(player_name_lower)
+    elif player_position == "Defender":
+        kpi = defender(player_name_lower)
+    elif player_position == "Midfielder":
+        kpi = midfielder(player_name_lower)
+    elif player_position == "Forward":
+        kpi = forward(player_name_lower)
 
-    if df_key_stats[df_key_stats["player_id"] == player_id]["position"] == "Goalkeeper" :
-        kpi = goalkeeper(player_id)
+    general_stats = general(player_name_lower)
+    return general_stats, kpi
 
-    if df_key_stats[df_key_stats["player_id"] == player_id]["position"] == "Defender" :
-        kpi = defender(player_id)
+def plot_stats(disciplinary_stats, offensive_stats):
+    fig, axs = plt.subplots(1, 2, figsize=(12, 5))
 
-    if df_key_stats[df_key_stats["player_id"] == player_id]["position"] == "Midfielder" :
-        kpi = midfielder(player_id)
+    # Plot for disciplinary stats
+    axs[0].bar(disciplinary_stats.keys(), disciplinary_stats.values(), color=['red', 'yellow'])
+    axs[0].set_title('Disciplinary Stats')
 
-    if df_key_stats[df_key_stats["player_id"] == player_id]["position"] == "Forward" :
-        kpi = forward(player_id)
+    # Plot for offensive stats
+    axs[1].bar(offensive_stats.keys(), offensive_stats.values(), color='blue')
+    axs[1].set_title('Offensive Stats')
 
-    return general, kpi
+    # Display the plots
+    plt.tight_layout()
+    plt.show()
