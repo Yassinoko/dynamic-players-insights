@@ -1,5 +1,6 @@
 from keras.models import load_model
 from data_processing import encode
+from array2class import get_class_from_array
 
 import numpy as np
 
@@ -7,50 +8,81 @@ import cv2
 import dlib
 import os
 
+from collections import Counter
 
-def extract_faces_from_video(video_path, output_folder='extracted_faces'):
-    # Create the output folder if it doesn't exist
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
 
-    # Load the pre-trained face detector model from dlib
+def extract_faces_from_video(video_path):
+    face_arrays = []
+
     detector = dlib.get_frontal_face_detector()
 
-    # Open the video file
     cap = cv2.VideoCapture(video_path)
-
     frame_count = 0
-    face_saved = False
+    fps = cap.get(cv2.CAP_PROP_FPS)
 
-    while cap.isOpened() and not face_saved:
+    while cap.isOpened():
         ret, frame = cap.read()
 
         if not ret:
             break
 
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        current_frame_time = cap.get(cv2.CAP_PROP_POS_MSEC)
+        next_second_time = current_frame_time + 1000
 
-        # Detect faces in the current frame
+        cap.set(cv2.CAP_PROP_POS_MSEC, next_second_time)
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = detector(gray)
 
-        for face_idx, face in enumerate(faces):
+        for face in faces:
             x, y, w, h = face.left(), face.top(), face.width(), face.height()
-
-            # Crop the detected face from the frame
             cropped_face = frame[y:y+h, x:x+w]
+            is_new_face = True
 
-            # Save the cropped face as an image file
-            face_filename = os.path.join(output_folder, f'face_{frame_count}_{face_idx}.jpg')
-            cv2.imwrite(face_filename, cropped_face)
+            if is_new_face:
 
-            face_saved = True  # Set flag to True after saving one face
-            break  # Break the loop after saving one face
+                face_arrays.append(cropped_face)
 
-        frame_count += 1
+                frame_count += int(fps)
+
+                cap.set(cv2.CAP_PROP_POS_FRAMES, frame_count)
 
     cap.release()
     cv2.destroyAllWindows()
 
-    num_files = len([f for f in os.listdir(output_folder) if os.path.isfile(os.path.join(output_folder, f))])
-    print(f"Number of face files saved: {num_files}")
-    print(f"Extracted faces saved in the folder: '{output_folder}'")
+    return face_arrays
+
+def preprocess_faces(face_arrays):
+    processed_faces = []
+
+    for face in face_arrays:
+        resized_face = cv2.resize(face, (64, 64))
+        resized_face = np.expand_dims(resized_face, axis=0)
+        processed_faces.append(resized_face)
+
+    return processed_faces
+
+
+def get_predictions(processed_faces, model):
+    predictions = []
+
+    for face in processed_faces:
+        prediction = model.predict(face)
+        predictions.append(prediction)
+
+    return predictions
+
+
+
+def get_unique_names_appearing_twice_or_more(results):
+    players_name = []
+    for array in results:
+        players_name.append(get_class_from_array(array))
+
+    name_counts = Counter(players_name)
+
+    filtered_names = [name for name, count in name_counts.items() if count >= 2]
+
+    unique_filtered_names = list(set(filtered_names))
+
+    return unique_filtered_names
