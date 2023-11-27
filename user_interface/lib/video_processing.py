@@ -11,7 +11,7 @@ import os
 from collections import Counter
 
 
-def extract_faces_from_video(video_path):
+def extract_faces_from_video_old(video_path):
     face_arrays = []
 
     detector = dlib.get_frontal_face_detector()
@@ -51,6 +51,39 @@ def extract_faces_from_video(video_path):
     cv2.destroyAllWindows()
 
     return face_arrays
+
+def extract_faces_from_video(video_path):
+    face_arrays = []
+
+    detector = dlib.get_frontal_face_detector()
+    cap = cv2.VideoCapture(video_path)
+    fps = cap.get(cv2.CAP_PROP_FPS)
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+
+        if not ret:
+            break
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = detector(gray)
+
+        for face_idx, face in enumerate(faces):
+            x, y, w, h = face.left(), face.top(), face.width(), face.height()
+            cropped_face = frame[y:y+h, x:x+w]
+
+            # Convert BGR to RGB
+            cropped_face_rgb = cv2.cvtColor(cropped_face, cv2.COLOR_BGR2RGB)
+            face_arrays.append(cropped_face_rgb)
+
+            # Move to the next second in the video
+            cap.set(cv2.CAP_PROP_POS_MSEC, cap.get(cv2.CAP_PROP_POS_MSEC) + 10)
+
+        cap.set(cv2.CAP_PROP_POS_FRAMES, cap.get(cv2.CAP_PROP_POS_FRAMES) + int(fps))
+
+    cap.release()
+    return face_arrays
+
 
 def preprocess_faces(face_arrays):
     processed_faces = []
