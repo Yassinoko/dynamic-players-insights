@@ -1,15 +1,15 @@
 import numpy as np
 
 def get_class_from_array(array):
-    
+
     predicted_class_index = np.argmax(array)
-    
+
     unique_classes = ['alexander-arnold', 'benzema','asensio', 'carvajal',
-                      'ceballos', 'courtois','henderson', 'lucas vazquez', 
+                      'ceballos', 'courtois','henderson', 'lucas vázquez',
                       'mané', 'salah']
-    
+
     return unique_classes[predicted_class_index]
-    
+
 
 # TESTING
 # print(get_class_from_array(np.array([[8.4230096e-06, 7.5404896e-05, 1.6748409e-05, 7.4644736e-04,
