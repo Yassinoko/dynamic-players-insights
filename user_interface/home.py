@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 from lib.data_processing import encode
 from lib.video_processing import *
-#from stats.
+from stats.kpi_formulas import *
 
 
 # Define emoji variables
@@ -87,8 +87,9 @@ if video is not None:
 
     with col2:
         st.header("Data List")
-        for name in names:
-            st.write(name)
+        selected_data = st.multiselect("Select Data Items", names)
+        # for name in names:
+        #     st.write(name)
 
     # Comparison Bar Charts
     st.header("Comparison Bar Charts")
@@ -99,3 +100,6 @@ if video is not None:
 
     # Display bar charts
     st.bar_chart({"Data 1": data1, "Data 2": data2})
+
+    for player in selected_data :
+        st.write(building_kpis(player))
