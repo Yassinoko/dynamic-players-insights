@@ -1,14 +1,25 @@
 from keras.models import load_model
-from data_processing import encode
-from array2class import get_class_from_array
+from lib.data_processing import encode
+# from array2class import get_class_from_array
 
 import numpy as np
 
 import cv2
 import dlib
 import os
+import numpy as np
 
 from collections import Counter
+
+def get_class_from_array(array):
+
+    predicted_class_index = np.argmax(array)
+
+    unique_classes = ['alexander-arnold', 'asensio','benzema', 'carvajal',
+                      'ceballos', 'courtois','henderson', 'lucas vázquez',
+                      'mané', 'salah']
+
+    return unique_classes[predicted_class_index]
 
 
 def extract_faces_from_video_old(video_path):
@@ -51,6 +62,7 @@ def extract_faces_from_video_old(video_path):
     cv2.destroyAllWindows()
 
     return face_arrays
+
 
 def extract_faces_from_video(video_path):
     face_arrays = []
@@ -106,7 +118,6 @@ def get_predictions(processed_faces, model):
     return predictions
 
 
-
 def get_unique_names_appearing_twice_or_more(results):
     players_name = []
     for array in results:
@@ -114,7 +125,7 @@ def get_unique_names_appearing_twice_or_more(results):
 
     name_counts = Counter(players_name)
 
-    filtered_names = [name for name, count in name_counts.items() if count >= 2]
+    filtered_names = [name for name, count in name_counts.items() if count >= 1]
 
     unique_filtered_names = list(set(filtered_names))
 

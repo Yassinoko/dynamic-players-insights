@@ -2,8 +2,10 @@ import streamlit as st
 import os
 import tensorflow as tf
 import numpy as np
-# from lib.video_processing import get_cropped_image_dict, save_frames_at_fps_cropped
-# from ml_models.data_library.image_preprocessing import processing_images
+from lib.data_processing import encode
+from lib.video_processing import *
+#from stats.
+
 
 # Define emoji variables
 soccer_emoji = '\u26BD'
@@ -69,17 +71,24 @@ if video is not None:
 col1, col2 = st.columns(2)
 
 if video is not None:
+
+    model_83 = load_model('lib/model_83_nik.h5')
+
+    face_arrays = extract_faces_from_video(file_path)
+    processed_faces = preprocess_faces(face_arrays)
+    results = get_predictions(processed_faces, model_83)
+    names = get_unique_names_appearing_twice_or_more(results)
+
     video_file = open(file_path, 'rb')
     video_bytes = video_file.read()
     with col1:
         st.header("Video Display")
-        st.video(video_bytes)
+        vid = st.video(video_bytes)
 
     with col2:
         st.header("Data List")
-        st.write("- Data 1")
-        st.write("- Data 2")
-        st.write("- Data 3")
+        for name in names:
+            st.write(name)
 
     # Comparison Bar Charts
     st.header("Comparison Bar Charts")
@@ -90,23 +99,3 @@ if video is not None:
 
     # Display bar charts
     st.bar_chart({"Data 1": data1, "Data 2": data2})
-
-# video_paths = "/Users/yassinebouaine/code/Yassinoko/dynamic-players-insights/uploaded_videos/Clip_test.mp4"
-# dir_path = "/Users/yassinebouaine/code/Yassinoko/dynamic-players-insights/uploaded_videos"
-
-# # Save the face of the first player detected in the video in image format
-# frame = save_frames_at_fps_cropped(video_paths, dir_path, "picture")
-# print(frame)
-
-# # Convert the image to an array, ready to be processed
-# frame_in_array = get_cropped_image_dict(frame)
-
-# # Processing the image. [0] because there is no label as this is what needs to be predicted
-# X_new = processing_images(frame_in_array)[0]
-# print(X_new)
-
-# # Loading the model
-# model = tf.keras.models.load_model("lib/model.keras")
-
-# # Predicting the label
-# prediction = model.predict(X_new)
