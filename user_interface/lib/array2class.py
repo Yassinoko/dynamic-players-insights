@@ -4,7 +4,7 @@ def get_class_from_array(array):
 
     predicted_class_index = np.argmax(array)
 
-    unique_classes = ['alexander-arnold', 'benzema','asensio', 'carvajal',
+    unique_classes = ['alexander-arnold', 'asensio','benzema', 'carvajal',
                       'ceballos', 'courtois','henderson', 'lucas vázquez',
                       'mané', 'salah']
 
