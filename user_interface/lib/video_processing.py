@@ -1,119 +1,56 @@
-# import modules
-import cv2
-import os
-import pandas as pd
-from PIL import Image
+from keras.models import load_model
+from data_processing import encode
+
 import numpy as np
-import face_recognition
-from ml_models.data_library.get_images import crop
 
-# load key_stats into notebook
-key_stats = pd.read_csv("raw_data/stats/key_stats.csv")
-# create Real Madrid and Man. United list of players
-real_player_list = list(key_stats[key_stats.club == 'Real Madrid'].player_name.unique())
-man_player_list = list(key_stats[key_stats.club == 'Man. United'].player_name.unique())
+import cv2
+import dlib
+import os
 
 
-def player_name_list_preprocessing(player_list):
-    """ This function takes a list of player names from kaggle dataset and lowers + replaces spaces by dashes"""
-    preprocessed_list = []
-    for player in player_list:
-        player = player.lower()
-        player = player.replace(" ", "-")
-        preprocessed_list.append(player)
-    return preprocessed_list
+def extract_faces_from_video(video_path, output_folder='extracted_faces'):
+    # Create the output folder if it doesn't exist
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
+    # Load the pre-trained face detector model from dlib
+    detector = dlib.get_frontal_face_detector()
 
-
-#### Function to save a given number of frames per second of an mp4 video
-
-def save_frames_at_fps(video_path, dir_path, basename, ext='jpg', frames_per_second=1):
+    # Open the video file
     cap = cv2.VideoCapture(video_path)
 
-    if not cap.isOpened():
-        return
-
-    os.makedirs(dir_path, exist_ok=True)
-    base_path = os.path.join(dir_path, basename)
-
-    digit = len(str(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))))
-    fps = cap.get(cv2.CAP_PROP_FPS)
     frame_count = 0
+    face_saved = False
 
-    frame_interval = int(fps / frames_per_second) if frames_per_second > 0 else 1
-
-    while True:
+    while cap.isOpened() and not face_saved:
         ret, frame = cap.read()
-        if ret:
-            if frame_count % frame_interval == 0:
-                cv2.imwrite('{}_{}.{}'.format(base_path, str(frame_count).zfill(digit), ext), frame)
-            frame_count += 1
-        else:
+
+        if not ret:
             break
 
-    cap.release()
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-# Example variables:
-# file = '/Users/Jason/Code/Yassinoko/dynamic-players-insights/raw_data/video/video_test.mp4'
-# folder = '/Users/Jason/Code/Yassinoko/dynamic-players-insights/raw_data/video/video_images/'
-# basename = 'test_frames'
+        # Detect faces in the current frame
+        faces = detector(gray)
 
-# Example call of the function with 5 frames per second
-# save_frames_at_fps(file, folder, basename, frames_per_second=5)
+        for face_idx, face in enumerate(faces):
+            x, y, w, h = face.left(), face.top(), face.width(), face.height()
 
+            # Crop the detected face from the frame
+            cropped_face = frame[y:y+h, x:x+w]
 
-def save_frames_at_fps_cropped(video_path, dir_path, basename, ext='jpg', frames_per_second=1):
-    cap = cv2.VideoCapture(video_path)
+            # Save the cropped face as an image file
+            face_filename = os.path.join(output_folder, f'face_{frame_count}_{face_idx}.jpg')
+            cv2.imwrite(face_filename, cropped_face)
 
-    if not cap.isOpened():
-        return
+            face_saved = True  # Set flag to True after saving one face
+            break  # Break the loop after saving one face
 
-    os.makedirs(dir_path, exist_ok=True)
-    base_path = os.path.join(dir_path, basename)
-
-    digit = len(str(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))))
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    frame_count = 0
-
-    frame_interval = int(fps / frames_per_second) if frames_per_second > 0 else 1
-
-    while True:
-        ret, frame = cap.read()
-        if ret:
-            if frame_count % frame_interval == 0:
-                image_pil = Image.fromarray(frame)  # Convert frame to PIL Image
-                cropped_face = crop(image_pil)  # Detect and crop face if available
-
-                if cropped_face:
-                    cropped_face.save(f'{base_path}_cropped_face.{ext}')  # Save cropped face
-                    cropped_image = cropped_face
-                    break  # Stop processing frames after finding and cropping a face
-
-            frame_count += 1
-        else:
-            break
+        frame_count += 1
 
     cap.release()
+    cv2.destroyAllWindows()
 
-    return cropped_image
-
-
-def get_cropped_image_dict(cropped_image):
-    """This modified function processes a cropped image and adds it to the dictionary of images."""
-
-    # Placeholder logic to process the cropped image and add it to the dictionary
-    try:
-        image_np = np.array(cropped_image)
-
-        img_label_dict = {'image': [], 'name': []}
-
-        # Assume label or name information for the cropped image is not available
-        label = 'Unknown'
-
-        img_label_dict['image'].append(image_np)
-        img_label_dict['name'].append(label)
-
-        return img_label_dict
-    except Exception as e:
-        print(f"Error processing cropped image: {e}")
-        return None
+    num_files = len([f for f in os.listdir(output_folder) if os.path.isfile(os.path.join(output_folder, f))])
+    print(f"Number of face files saved: {num_files}")
+    print(f"Extracted faces saved in the folder: '{output_folder}'")
