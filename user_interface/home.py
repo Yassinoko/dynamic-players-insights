@@ -5,6 +5,7 @@ import numpy as np
 from lib.data_processing import encode
 from lib.video_processing import *
 from stats.kpi_formulas import *
+from stats.graphics import *
 
 
 # Define emoji variables
@@ -67,7 +68,7 @@ file_path = None
 # Save video in uploaded_video folder using name of the file uploaded
 if video is not None:
     # video details saved to present if needed
-    video_details = {"FileName": video.name, "FileType": video.type}
+    # video_details = {"FileName": video.name, "FileType": video.type}
     # create folder name to store uploaded videos
     upload_dir = "uploaded_videos"
     # create the directory if it does not exist
@@ -103,20 +104,41 @@ if video is not None:
     with col2:
         st.header("Players from the video")
         selected_data = st.multiselect("Select Players to compare", map(lambda x: x.upper(), names))
+        selected_data = map(lambda x: x.lower(), selected_data)
 
     if selected_data != []:
         # Comparison Bar Charts
-        st.header("Comparison Bar Charts")
+        # st.header("Comparison Bar Charts")
 
-        bar_dict = {}
+        player_positions = {
+        'benzema': 'forward',
+        'salah' : 'forward',
+        'mané' : 'forward',
+        'asensio' : 'forward',
+        'henderson' : 'midfield',
+        'carvajal' : 'defender',
+        'courtois' : 'goalkeeper',
+        'alexander-arnold' : 'defender',
+        'ceballos' : 'midfield',
+        'lucas vázquez' : 'forward'
+        }
+
+        dict_pos = {'forward':[], 'midfield':[], 'defender':[], 'goalkeeper':[]}
 
         # Generate random data for the bar charts
         for player in selected_data:
-            score = np.random.randint(1, 10, size=5)
-            bar_dict[player] = score
+            dict_pos[player_positions[player]].append(player)
 
-        # Display bar charts
-        st.bar_chart(bar_dict)
+        for pos, players in dict_pos.items():
+            if len(players) != 0:
+                if pos == 'forward':
+                    st.plotly_chart(plot_combined_goal_types(*players))
+                elif pos == 'midfield':
+                    st.plotly_chart(plot_pass_stats(*players))
+                elif pos == 'defender':
+                    st.plotly_chart(plot_tackle_stats(*players))
+                else:
+                    st.plotly_chart(plot_goalkeeper_performance(*players))
 
     for player in selected_data :
         st.write(building_kpis(player))

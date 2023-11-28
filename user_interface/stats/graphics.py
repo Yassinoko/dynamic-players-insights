@@ -67,7 +67,7 @@ def plot_combined_goal_types(*args):
     fig.update_xaxes(title_text='Goal Locations', row=1, col=2)
     fig.update_yaxes(title_text='Goals', row=1, col=1)
 
-    fig.show()
+    return fig
 
 
 
@@ -76,7 +76,7 @@ def plot_pass_stats(*players):
         player_name = players[0].lower()
 
         # Filter data for the specified player
-        filtered_data = df_distribution[df_distribution['player_name'].str.lower() == player_name]
+        filtered_data = df_distributon[df_distributon['player_name'].str.lower() == player_name]
 
         if filtered_data.empty:
             print(f"No data found for player: {player_name.capitalize()}")
@@ -102,7 +102,8 @@ def plot_pass_stats(*players):
         fig.update_xaxes(title_text='Pass Statistics')
         fig.update_yaxes(title_text='Count')
         fig.update_layout(showlegend=True, title='Pass Statistics', barmode='stack')
-        fig.show()
+
+        return fig
     else:
         fig = make_subplots(rows=1, cols=len(players), subplot_titles=[f'Pass Statistics for {player.capitalize()}' for player in players])
 
@@ -136,7 +137,8 @@ def plot_pass_stats(*players):
             fig.update_yaxes(title_text='Count', row=1, col=i)
 
         fig.update_layout(showlegend=True, title='Pass Statistics', barmode='stack')
-        fig.show()
+
+        return fig
 
 
 
@@ -164,7 +166,8 @@ def plot_tackle_stats(*args):
         fig.update_xaxes(title_text='Tackle')
         fig.update_yaxes(title_text='Count')
         fig.update_layout(title=f'{player_name.capitalize()} - Tackle Stats', showlegend=True)
-        fig.show()
+
+        return fig
     else:
         fig = make_subplots(rows=1, cols=2, subplot_titles=['Tackle WON', 'Tackle LOST'])
 
@@ -204,7 +207,8 @@ def plot_tackle_stats(*args):
         fig.update_yaxes(title_text='Tackle Count', row=1, col=2)
 
         fig.update_layout(showlegend=True)
-        fig.show()
+
+        return fig
 
 
 
@@ -238,7 +242,7 @@ def plot_goalkeeper_performance(*args):
         fig.update_layout(title=f'{player_name.capitalize()} - Goalkeeper Performance',
                           showlegend=True)
 
-        fig.show()
+        return fig
     else:
         fig = make_subplots(rows=1, cols=2, subplot_titles=['Saved', 'Conceded'])
 
@@ -284,4 +288,4 @@ def plot_goalkeeper_performance(*args):
 
         fig.update_layout(showlegend=True)
 
-        fig.show()
+        return fig
