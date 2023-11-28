@@ -2,15 +2,22 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 
-df_attacking = pd.read_csv('stats_data/attacking.csv')
-df_attempts = pd.read_csv('stats_data/attempts.csv')
-df_defending = pd.read_csv('stats_data/defending.csv')
-df_disciplinary = pd.read_csv('stats_data/disciplinary.csv')
-df_distributon = pd.read_csv('stats_data/distributon.csv')
-df_goalkeeping = pd.read_csv('stats_data/goalkeeping.csv')
-df_goals = pd.read_csv('stats_data/goals.csv')
-df_key_stats = pd.read_csv('stats_data/key_stats.csv')
+ospath = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.join(ospath, "stats_data")
+
+print(ospath)
+print(csv_path)
+df_attacking = pd.read_csv(os.path.join(csv_path, "attacking.csv"))
+df_attempts = pd.read_csv(os.path.join(csv_path, "attempts.csv"))
+df_defending = pd.read_csv(os.path.join(csv_path, "defending.csv"))
+df_disciplinary = pd.read_csv(os.path.join(csv_path, "disciplinary.csv"))
+df_distributon = pd.read_csv(os.path.join(csv_path, "distributon.csv"))
+df_goalkeeping = pd.read_csv(os.path.join(csv_path, "goalkeeping.csv"))
+df_goals = pd.read_csv(os.path.join(csv_path, "goals.csv"))
+df_key_stats = pd.read_csv(os.path.join(csv_path, "key_stats.csv"))
+
 #     general = general(player_id)
 
 #     if df_key_stats[df_key_stats["player_id"] == player_id]["position"] == "Goalkeeper" :
