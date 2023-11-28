@@ -3,14 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-df_attacking = pd.read_csv('stats/stats_data/attacking.csv')
-df_attempts = pd.read_csv('stats/stats_data/attempts.csv')
-df_defending = pd.read_csv('stats/stats_data/defending.csv')
-df_disciplinary = pd.read_csv('stats/stats_data/disciplinary.csv')
-df_distributon = pd.read_csv('stats/stats_data/distributon.csv')
-df_goalkeeping = pd.read_csv('stats/stats_data/goalkeeping.csv')
-df_goals = pd.read_csv('stats/stats_data/goals.csv')
-df_key_stats = pd.read_csv('stats/stats_data/key_stats.csv')
+df_attacking = pd.read_csv('stats_data/attacking.csv')
+df_attempts = pd.read_csv('stats_data/attempts.csv')
+df_defending = pd.read_csv('stats_data/defending.csv')
+df_disciplinary = pd.read_csv('stats_data/disciplinary.csv')
+df_distributon = pd.read_csv('stats_data/distributon.csv')
+df_goalkeeping = pd.read_csv('stats_data/goalkeeping.csv')
+df_goals = pd.read_csv('stats_data/goals.csv')
+df_key_stats = pd.read_csv('stats_data/key_stats.csv')
 #     general = general(player_id)
 
 #     if df_key_stats[df_key_stats["player_id"] == player_id]["position"] == "Goalkeeper" :
