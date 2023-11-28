@@ -273,4 +273,4 @@ uvicorn
 
 
 opencv-python
-dlib==19.24.2
+face_recognition @ git+https://github.com/Yassinoko/face_recognition.git
