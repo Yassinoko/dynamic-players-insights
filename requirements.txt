@@ -273,4 +273,5 @@ uvicorn
 
 
 opencv-python
+opencv-python-headless
 face_recognition @ git+https://github.com/Yassinoko/face_recognition.git
