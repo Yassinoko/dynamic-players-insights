@@ -19,16 +19,30 @@ page_bg_img = f'''
 <style>
 [data-testid="stAppViewContainer"] > .main {{
 background-image: url("https://images5.alphacoders.com/571/571559.jpg");
-background-size: 180%;
-background-position: top left;
+background-size: cover;
+background-position: center;
 background-repeat: no-repeat;
-background-attachment: local;
+background-attachment: fixed;
 }} '''
 
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
 # Introduction
-st.image('logo.png')
+st.markdown(
+    """
+    <style>
+        [data-testid=stImage] {
+            text-align: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+    </style>
+    """, unsafe_allow_html=True
+)
+
+st.image('KickVision_X_UCL_3.png')
 
 st.markdown(
     f"""
@@ -43,7 +57,7 @@ st.markdown("""
 
 # Request user to input short video via file upload
 video = st.file_uploader(
-    "Upload a short video of your favorite sport moment", # user message
+    "Upload a short video of your favorite highlight from the UCL 21/22", # user message
     type=['mp4', 'mov'], # possible to add other video types
 )
 
@@ -81,25 +95,28 @@ if video is not None:
 
     video_file = open(file_path, 'rb')
     video_bytes = video_file.read()
+
     with col1:
-        st.header("Video Display")
+        st.header("Uploaded video")
         vid = st.video(video_bytes)
 
     with col2:
-        st.header("Data List")
-        selected_data = st.multiselect("Select Data Items", names)
-        # for name in names:
-        #     st.write(name)
+        st.header("Players from the video")
+        selected_data = st.multiselect("Select Players to compare", map(lambda x: x.upper(), names))
 
-    # Comparison Bar Charts
-    st.header("Comparison Bar Charts")
+    if selected_data != []:
+        # Comparison Bar Charts
+        st.header("Comparison Bar Charts")
 
-    # Generate random data for the bar charts
-    data1 = np.random.randint(1, 10, size=5)
-    data2 = np.random.randint(1, 10, size=5)
+        bar_dict = {}
 
-    # Display bar charts
-    st.bar_chart({"Data 1": data1, "Data 2": data2})
+        # Generate random data for the bar charts
+        for player in selected_data:
+            score = np.random.randint(1, 10, size=5)
+            bar_dict[player] = score
+
+        # Display bar charts
+        st.bar_chart(bar_dict)
 
     for player in selected_data :
         st.write(building_kpis(player))
