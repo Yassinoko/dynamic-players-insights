@@ -7,8 +7,6 @@ import os
 ospath = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(ospath, "stats_data")
 
-print(ospath)
-print(csv_path)
 df_attacking = pd.read_csv(os.path.join(csv_path, "attacking.csv"))
 df_attempts = pd.read_csv(os.path.join(csv_path, "attempts.csv"))
 df_defending = pd.read_csv(os.path.join(csv_path, "defending.csv"))

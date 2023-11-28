@@ -43,7 +43,10 @@ st.markdown(
     """, unsafe_allow_html=True
 )
 
-st.image('KickVision_X_UCL_3.png')
+ospath = os.path.dirname(os.path.abspath(__file__))
+img_path = os.path.join(ospath, "KickVision_X_UCL_3.png")
+
+st.image(img_path)
 
 st.markdown(
     f"""
