@@ -90,7 +90,8 @@ col1, col2 = st.columns(2)
 
 if video is not None:
 
-    model_83 = load_model('lib/model_83_nik.h5')
+    model_path = os.path.join(ospath, "lib" ,"model_83_nik.h5")
+    model_83 = load_model(model_path)
 
     face_arrays = extract_faces_from_video(file_path)
     processed_faces = preprocess_faces(face_arrays)
