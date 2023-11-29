@@ -124,7 +124,7 @@ if video is not None:
         'courtois' : 'goalkeeper',
         'alexander-arnold' : 'defender',
         'ceballos' : 'midfield',
-        'lucas vázquez' : 'forward'
+        'lucas vázquez' : 'midfield'
         }
 
         dict_pos = {'forward':[], 'midfield':[], 'defender':[], 'goalkeeper':[]}

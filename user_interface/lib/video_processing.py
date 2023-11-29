@@ -73,11 +73,16 @@ def extract_faces_from_video(video_path):
 
     while cap.isOpened():
         ret, frame = cap.read()
+        
+        try:
+            blurred_frame = cv2.GaussianBlur(frame, (35, 35), 0)
+        except:
+            pass
 
         if not ret:
             break
 
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2GRAY)
         faces = detector(gray)
 
         for face_idx, face in enumerate(faces):
