@@ -83,10 +83,12 @@ if video is not None:
         f.write(video.getbuffer())
     # inform the user if the video was successfully uploaded
     # st.success(f"Video Successfully Uploaded  {celebration_emoji}")
-    
+
     # Loading gif
-    gif_display = st.image('51LA.gif', width=275)
-    
+
+    gif_path = os.path.join(ospath, "51LA.gif")
+    gif_display = st.image(gif_path, width=275)
+
 if video is not None:
 
     model_path = os.path.join(ospath, "lib" ,"model_83_nik.h5")
@@ -99,14 +101,14 @@ if video is not None:
 
     video_file = open(file_path, 'rb')
     video_bytes = video_file.read()
-    
+
     # Displying video
     st.header("Uploaded video")
     vid = st.video(video_bytes)
-    
+
     # Remove gif
     gif_display.empty()
-    
+
     # Player selection
     st.header("Players from the video")
     selected_data = st.multiselect("Select Players to compare", map(lambda x: x.upper(), names))
@@ -116,7 +118,7 @@ if video is not None:
     if selected_data != []:
             # Comparison Bar Charts
             # st.header("Comparison Bar Charts")
-            
+
             player_positions = {
             'benzema': 'forward and midfield',
             'salah' : 'forward and midfield',
@@ -135,7 +137,7 @@ if video is not None:
             # Generate random data for the bar charts
             for player in selected_data:
                 dict_pos[player_positions[player]].append(player)
-                
+
             st.header("Player Statistics")
 
             for pos, players in dict_pos.items():
@@ -162,6 +164,6 @@ if video is not None:
                                 st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
                     else:
                         st.plotly_chart(plot_goalkeeper_performance(*players), use_container_width=True)
-                        
+
     for player in selected_data :
         st.write(building_kpis(player))
