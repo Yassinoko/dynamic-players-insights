@@ -143,27 +143,13 @@ if video is not None:
             for pos, players in dict_pos.items():
                 if len(players) != 0:
                     if pos in 'forward and midfield':
-                        selected_stats = st.multiselect("Select forward/midfield stats", ['Goals', 'Passes'])
-                        if selected_stats != []:
-                            if 'Goals' in selected_stats and 'Passes' in selected_stats:
-                                st.plotly_chart(plot_combined_goal_types(*players), use_container_width=True)
-                                st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
-                            elif selected_stats == ['Goals']:
-                                st.plotly_chart(plot_combined_goal_types(*players), use_container_width=True)
-                            elif selected_stats == ['Passes']:
-                                st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
+                            st.plotly_chart(plot_combined_goal_types(*players), use_container_width=True)
+                            st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
                     elif pos == 'defender':
-                        selected_stats = st.multiselect("Select defender stats", ['Passes', 'Tackles'])
-                        if selected_stats != []:
-                            if 'Tackles' in selected_stats and 'Passes' in selected_stats:
-                                st.plotly_chart(plot_tackle_stats(*players), use_container_width=True)
-                                st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
-                            elif selected_stats == ['Tackles']:
-                                st.plotly_chart(plot_tackle_stats(*players), use_container_width=True)
-                            elif selected_stats == ['Passes']:
-                                st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
+                            st.plotly_chart(plot_tackle_stats(*players), use_container_width=True)
+                            st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
                     else:
-                        st.plotly_chart(plot_goalkeeper_performance(*players), use_container_width=True)
+                        st.plotly_chart(plot_goalkeeper_performance(*players), use_container_width=True)       
 
     for player in selected_data :
         st.write(building_kpis(player))
