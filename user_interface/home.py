@@ -114,19 +114,19 @@ if video is not None:
             st.header("Player Statistics")
             
             player_positions = {
-            'benzema': 'forward',
-            'salah' : 'forward',
-            'mané' : 'forward',
-            'asensio' : 'forward',
-            'henderson' : 'midfield',
+            'benzema': 'forward and midfield',
+            'salah' : 'forward and midfield',
+            'mané' : 'forward and midfield',
+            'asensio' : 'forward and midfield',
+            'henderson' : 'forward and midfield',
             'carvajal' : 'defender',
             'courtois' : 'goalkeeper',
             'alexander-arnold' : 'defender',
-            'ceballos' : 'midfield',
-            'lucas vázquez' : 'midfield'
+            'ceballos' : 'forward and midfield',
+            'lucas vázquez' : 'forward and midfield'
             }
 
-            dict_pos = {'forward':[], 'midfield':[], 'defender':[], 'goalkeeper':[]}
+            dict_pos = {'forward and midfield':[], 'defender':[], 'goalkeeper':[]}
 
             # Generate random data for the bar charts
             for player in selected_data:
@@ -134,9 +134,8 @@ if video is not None:
 
             for pos, players in dict_pos.items():
                 if len(players) != 0:
-                    if pos == 'forward':  
+                    if pos in 'forward and midfield':  
                         st.plotly_chart(plot_combined_goal_types(*players), use_container_width=True)
-                    elif pos == 'midfield':
                         st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
                     elif pos == 'defender':
                         st.plotly_chart(plot_tackle_stats(*players), use_container_width=True)
