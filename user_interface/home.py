@@ -82,7 +82,10 @@ if video is not None:
     with open(file_path, "wb") as f:
         f.write(video.getbuffer())
     # inform the user if the video was successfully uploaded
-    st.success(f"Video Successfully Uploaded  {celebration_emoji}")
+    # st.success(f"Video Successfully Uploaded  {celebration_emoji}")
+    
+    # Loading gif
+    gif_display = st.image('51LA.gif', width=275)
     
 if video is not None:
 
@@ -93,25 +96,26 @@ if video is not None:
     processed_faces = preprocess_faces(face_arrays)
     results = get_predictions(processed_faces, model_83)
     names = get_unique_names_appearing_twice_or_more(results)
-    
-    st.header("Players from the video")
-    selected_data = st.multiselect("Select Players to compare", map(lambda x: x.upper(), names))
-    selected_data = map(lambda x: x.lower(), selected_data)
 
     video_file = open(file_path, 'rb')
     video_bytes = video_file.read()
     
-    col1, col2 = st.columns(2)
+    # Displying video
+    st.header("Uploaded video")
+    vid = st.video(video_bytes)
+    
+    # Remove gif
+    gif_display.empty()
+    
+    # Player selection
+    st.header("Players from the video")
+    selected_data = st.multiselect("Select Players to compare", map(lambda x: x.upper(), names))
+    selected_data = map(lambda x: x.lower(), selected_data)
 
-    with col1:
-        st.header("Uploaded video")
-        vid = st.video(video_bytes)
-
-    with col2:
-        if selected_data != []:
+    # Displying graphs
+    if selected_data != []:
             # Comparison Bar Charts
             # st.header("Comparison Bar Charts")
-            st.header("Player Statistics")
             
             player_positions = {
             'benzema': 'forward and midfield',
@@ -131,16 +135,33 @@ if video is not None:
             # Generate random data for the bar charts
             for player in selected_data:
                 dict_pos[player_positions[player]].append(player)
+                
+            st.header("Player Statistics")
 
             for pos, players in dict_pos.items():
                 if len(players) != 0:
-                    if pos in 'forward and midfield':  
-                        st.plotly_chart(plot_combined_goal_types(*players), use_container_width=True)
-                        st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
+                    if pos in 'forward and midfield':
+                        selected_stats = st.multiselect("Select forward/midfield stats", ['Goals', 'Passes'])
+                        if selected_stats != []:
+                            if 'Goals' in selected_stats and 'Passes' in selected_stats:
+                                st.plotly_chart(plot_combined_goal_types(*players), use_container_width=True)
+                                st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
+                            elif selected_stats == ['Goals']:
+                                st.plotly_chart(plot_combined_goal_types(*players), use_container_width=True)
+                            elif selected_stats == ['Passes']:
+                                st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
                     elif pos == 'defender':
-                        st.plotly_chart(plot_tackle_stats(*players), use_container_width=True)
+                        selected_stats = st.multiselect("Select defender stats", ['Passes', 'Tackles'])
+                        if selected_stats != []:
+                            if 'Tackles' in selected_stats and 'Passes' in selected_stats:
+                                st.plotly_chart(plot_tackle_stats(*players), use_container_width=True)
+                                st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
+                            elif selected_stats == ['Tackles']:
+                                st.plotly_chart(plot_tackle_stats(*players), use_container_width=True)
+                            elif selected_stats == ['Passes']:
+                                st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
                     else:
                         st.plotly_chart(plot_goalkeeper_performance(*players), use_container_width=True)
-
+                        
     for player in selected_data :
         st.write(building_kpis(player))
