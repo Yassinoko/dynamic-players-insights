@@ -20,10 +20,11 @@ df_goals = pd.read_csv(os.path.join(csv_path, "goals.csv"))
 df_key_stats = pd.read_csv(os.path.join(csv_path, "key_stats.csv"))
 
 
+
 def plot_combined_goal_types(*args):
     # Convert player names to lowercase
     player_stats = []
-    colors = ['blue', 'red', 'green', 'orange', 'purple']  # Define colors for players
+    pass_colors = px.colors.qualitative.Pastel  # Get pastel colors for goal types analysis
 
     for i, player_name in enumerate(args, start=1):
         player_name = player_name.lower()
@@ -36,7 +37,7 @@ def plot_combined_goal_types(*args):
         player_stats.append({
             'name': player_name.capitalize(),
             'data': player_data,
-            'color': colors[i - 1] if i <= len(colors) else None  # Assign colors to players
+            'color': pass_colors[i - 1] if i <= len(pass_colors) else None  # Assign pastel colors to players
         })
 
     if not player_stats:
@@ -45,6 +46,13 @@ def plot_combined_goal_types(*args):
 
     # Create subplots based on the number of players
     fig = make_subplots(rows=1, cols=2, subplot_titles=('How scored', 'From where scored'))
+
+    if len(player_stats) == 1:  # If only one player is passed
+        player = player_stats[0]
+        player_name = player['name']
+
+        # Change the subplot titles to include the player's name
+        fig.update_layout(title=f'Goal types analysis - {player_name}')
 
     for player in player_stats:
         # Summarize goal types for 'How scored' analysis
@@ -66,13 +74,12 @@ def plot_combined_goal_types(*args):
                       row=1, col=2)
 
     # Update layout
-    fig.update_layout(title='Goal types analysis', showlegend=True)
+    fig.update_layout(showlegend=len(player_stats) > 1)  # Show legend if more than one player
     fig.update_xaxes(title_text='Goal Types', row=1, col=1)
     fig.update_xaxes(title_text='Goal Locations', row=1, col=2)
     fig.update_yaxes(title_text='Goals', row=1, col=1)
 
     return fig
-
 
 
 def plot_pass_stats(*players):
@@ -101,20 +108,19 @@ def plot_pass_stats(*players):
         fig = go.Figure()
         for col_name in valid_pass_columns:
             pass_data_str = pass_data[col_name].astype(str)  # Convert pass data to strings for text parameter
-            fig.add_trace(go.Bar(x=[player_name], y=[pass_data[col_name]],
-                                 name=col_name.capitalize(), text=pass_data_str, textposition='inside'))
+            fig.add_trace(go.Bar(x=[col_name.capitalize()], y=[pass_data[col_name]],
+                                 name=player_name, text=pass_data_str, textposition='inside'))
 
         # Update layout for Pass Statistics
-        fig.update_xaxes(title_text='Players')
+        # fig.update_xaxes(title_text='Statistics')  # Update x-axis label
         fig.update_yaxes(title_text='Count')
-        fig.update_layout(showlegend=True, title=f'Pass Statistics for {player_name}', barmode='group')
+        fig.update_layout(showlegend=False, title=f'Pass Statistics for {player_name}', barmode='group')
 
         return fig
     else:
         fig = make_subplots(rows=1, cols=2, subplot_titles=('Pass Attempted', 'Pass Completed'))
 
         pass_colors = px.colors.qualitative.Pastel  # Get a set of colors for pass statistics
-        unique_players = set()
 
         for i, player_name in enumerate(players, start=1):
             # Filter data for the specified player (lowercase)
@@ -123,8 +129,6 @@ def plot_pass_stats(*players):
             if filtered_data.empty:
                 print(f"No data found for player: {player_name.capitalize()}")
                 continue
-
-            unique_players.add(player_name.capitalize())
 
             # Extract pass columns and check validity
             pass_columns = ["pass_attempted", "pass_completed"]
@@ -137,25 +141,24 @@ def plot_pass_stats(*players):
             # Extract the required pass statistics
             pass_data = filtered_data[valid_pass_columns].iloc[0]
 
-            # Create bar chart for Pass Statistics
+            # Create bar chart for Pass Statistics without names on x-axis
             for j, col_name in enumerate(valid_pass_columns, start=1):
-                # Convert pass data to strings for text parameter
                 pass_data_str = pass_data[col_name].astype(str)
 
-                fig.add_trace(go.Bar(x=[player_name.capitalize()], y=[pass_data[col_name]],
-                                     name=col_name.capitalize(), legendgroup=player_name.capitalize(), marker_color=pass_colors[i - 1], text=pass_data_str, textposition='inside'), row=1, col=j)
+                fig.add_trace(go.Bar(x=[f'Player {i}'], y=[pass_data[col_name]],
+                                     name=player_name.capitalize(), legendgroup=player_name.capitalize(),
+                                     marker_color=pass_colors[i - 1], text=pass_data_str, textposition='inside'),
+                              row=1, col=j)
 
         # Update layout for Pass Statistics
-        fig.update_xaxes(title_text='Players', row=1, col=1)
-        fig.update_xaxes(title_text='Players', row=1, col=2)
+        fig.update_xaxes(title_text='', tickvals=[], ticktext=[], row=1, col=1)  # Empty x-axis labels
+        fig.update_xaxes(title_text='', tickvals=[], ticktext=[], row=1, col=2)  # Empty x-axis labels
         fig.update_yaxes(title_text='Count', row=1, col=1)
         fig.update_yaxes(title_text='Count', row=1, col=2)
         fig.update_layout(showlegend=True, title='Pass Statistics Comparison', barmode='group')
 
-        # Set legend items based on unique player names
-        fig.for_each_trace(lambda trace: trace.update(showlegend=trace.name in unique_players))
-
         return fig
+
 
 
 def plot_tackle_stats(*args):
