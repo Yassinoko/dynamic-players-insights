@@ -107,7 +107,7 @@ if video is not None:
     vid = st.video(video_bytes)
 
     # Remove gif
-    gif_display.empty()
+    # gif_display.empty()
 
     # Player selection
     st.header("Players from the video")
