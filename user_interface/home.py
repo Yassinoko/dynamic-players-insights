@@ -83,11 +83,7 @@ if video is not None:
         f.write(video.getbuffer())
     # inform the user if the video was successfully uploaded
     st.success(f"Video Successfully Uploaded  {celebration_emoji}")
-
-# st.write("file path : ", file_path)
-
-col1, col2 = st.columns(2)
-
+    
 if video is not None:
 
     model_path = os.path.join(ospath, "lib" ,"model_83_nik.h5")
@@ -97,52 +93,55 @@ if video is not None:
     processed_faces = preprocess_faces(face_arrays)
     results = get_predictions(processed_faces, model_83)
     names = get_unique_names_appearing_twice_or_more(results)
+    
+    st.header("Players from the video")
+    selected_data = st.multiselect("Select Players to compare", map(lambda x: x.upper(), names))
+    selected_data = map(lambda x: x.lower(), selected_data)
 
     video_file = open(file_path, 'rb')
     video_bytes = video_file.read()
+    
+    col1, col2 = st.columns(2)
 
     with col1:
         st.header("Uploaded video")
         vid = st.video(video_bytes)
 
     with col2:
-        st.header("Players from the video")
-        selected_data = st.multiselect("Select Players to compare", map(lambda x: x.upper(), names))
-        selected_data = map(lambda x: x.lower(), selected_data)
+        if selected_data != []:
+            # Comparison Bar Charts
+            # st.header("Comparison Bar Charts")
+            st.header("Player Statistics")
+            
+            player_positions = {
+            'benzema': 'forward',
+            'salah' : 'forward',
+            'mané' : 'forward',
+            'asensio' : 'forward',
+            'henderson' : 'midfield',
+            'carvajal' : 'defender',
+            'courtois' : 'goalkeeper',
+            'alexander-arnold' : 'defender',
+            'ceballos' : 'midfield',
+            'lucas vázquez' : 'midfield'
+            }
 
-    if selected_data != []:
-        # Comparison Bar Charts
-        # st.header("Comparison Bar Charts")
+            dict_pos = {'forward':[], 'midfield':[], 'defender':[], 'goalkeeper':[]}
 
-        player_positions = {
-        'benzema': 'forward',
-        'salah' : 'forward',
-        'mané' : 'forward',
-        'asensio' : 'forward',
-        'henderson' : 'midfield',
-        'carvajal' : 'defender',
-        'courtois' : 'goalkeeper',
-        'alexander-arnold' : 'defender',
-        'ceballos' : 'midfield',
-        'lucas vázquez' : 'midfield'
-        }
+            # Generate random data for the bar charts
+            for player in selected_data:
+                dict_pos[player_positions[player]].append(player)
 
-        dict_pos = {'forward':[], 'midfield':[], 'defender':[], 'goalkeeper':[]}
-
-        # Generate random data for the bar charts
-        for player in selected_data:
-            dict_pos[player_positions[player]].append(player)
-
-        for pos, players in dict_pos.items():
-            if len(players) != 0:
-                if pos == 'forward':
-                    st.plotly_chart(plot_combined_goal_types(*players))
-                elif pos == 'midfield':
-                    st.plotly_chart(plot_pass_stats(*players))
-                elif pos == 'defender':
-                    st.plotly_chart(plot_tackle_stats(*players))
-                else:
-                    st.plotly_chart(plot_goalkeeper_performance(*players))
+            for pos, players in dict_pos.items():
+                if len(players) != 0:
+                    if pos == 'forward':  
+                        st.plotly_chart(plot_combined_goal_types(*players), use_container_width=True)
+                    elif pos == 'midfield':
+                        st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
+                    elif pos == 'defender':
+                        st.plotly_chart(plot_tackle_stats(*players), use_container_width=True)
+                    else:
+                        st.plotly_chart(plot_goalkeeper_performance(*players), use_container_width=True)
 
     for player in selected_data :
         st.write(building_kpis(player))
