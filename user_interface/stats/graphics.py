@@ -82,6 +82,7 @@ def plot_combined_goal_types(*args):
     return fig
 
 
+
 def plot_pass_stats(*players):
     if len(players) == 1:
         player_name = players[0].capitalize()
@@ -251,15 +252,18 @@ def plot_goalkeeper_performance(*args):
         values[1] = max(values[1], 0)
 
         fig = go.Figure()
+        colors = px.colors.qualitative.Pastel  # Get a set of colors for players
+
+        # Add bar chart trace for performance
         fig.add_trace(go.Bar(x=gl_sum['index'], y=values,
-                             marker_color=['blue', 'red'],
+                             marker_color=colors[:len(gl_sum)],
                              text=values, textposition='auto',
-                             name=['Saved', 'Conceded']))
+                             name=f'Performance - {player_name.capitalize()}'))
 
         fig.update_xaxes(title_text='Metrics')
         fig.update_yaxes(title_text='Count')
         fig.update_layout(title=f'{player_name.capitalize()} - Goalkeeper Performance',
-                          showlegend=True)
+                          showlegend=False)
 
         return fig
     else:
