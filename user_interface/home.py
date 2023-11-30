@@ -86,8 +86,8 @@ if video is not None:
 
     # Loading gif
 
-    gif_path = os.path.join(ospath, "51LA.gif")
-    gif_display = st.image(gif_path, width=275)
+    # gif_path = os.path.join(ospath, "51LA.gif")
+    # gif_display = st.image(gif_path, width=275)
 
 if video is not None:
 
@@ -149,7 +149,7 @@ if video is not None:
                             st.plotly_chart(plot_tackle_stats(*players), use_container_width=True)
                             st.plotly_chart(plot_pass_stats(*players), use_container_width=True)
                     else:
-                        st.plotly_chart(plot_goalkeeper_performance(*players), use_container_width=True)       
+                        st.plotly_chart(plot_goalkeeper_performance(*players), use_container_width=True)
 
     for player in selected_data :
         st.write(building_kpis(player))
