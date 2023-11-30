@@ -46,6 +46,7 @@ def plot_combined_goal_types(*args):
 
     # Create subplots based on the number of players
     fig = make_subplots(rows=1, cols=2, subplot_titles=('How scored', 'From where scored'))
+    fig.update_layout(title=f'Goal Types Analysis')
 
     if len(player_stats) == 1:  # If only one player is passed
         player = player_stats[0]
