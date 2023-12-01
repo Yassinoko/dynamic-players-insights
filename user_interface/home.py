@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import tensorflow as tf
 import numpy as np
+import tempfile
 from lib.data_processing import encode
 from lib.video_processing import *
 from stats.kpi_formulas import *
@@ -71,15 +72,18 @@ file_path = None
 # Save video in uploaded_video folder using name of the file uploaded
 if video is not None:
     # video details saved to present if needed
-    # video_details = {"FileName": video.name, "FileType": video.type}
-    # create folder name to store uploaded videos
-    upload_dir = "uploaded_videos"
-    # create the directory if it does not exist
-    os.makedirs(upload_dir, exist_ok=True)
-    # define the file_path of the video
-    file_path = os.path.join(upload_dir, video.name)
-    # save the video using the file_path defined
-    with open(file_path, "wb") as f:
+    # # video_details = {"FileName": video.name, "FileType": video.type}
+    # # create folder name to store uploaded videos
+    # upload_dir = "uploaded_videos"
+    # # create the directory if it does not exist
+    # os.makedirs(upload_dir, exist_ok=True)
+    # # define the file_path of the video
+    # file_path = os.path.join(upload_dir, video.name)
+    # # save the video using the file_path defined
+    
+    temp_video_path = os.path.join(tempfile.gettempdir(), video.name)
+    
+    with open(temp_video_path, "wb") as f:
         f.write(video.getbuffer())
     # inform the user if the video was successfully uploaded
     # st.success(f"Video Successfully Uploaded  {celebration_emoji}")
@@ -94,12 +98,12 @@ if video is not None:
     model_path = os.path.join(ospath, "lib" ,"model_83_nik.h5")
     model_83 = load_model(model_path)
 
-    face_arrays = extract_faces_from_video(file_path)
+    face_arrays = extract_faces_from_video(temp_video_path)
     processed_faces = preprocess_faces(face_arrays)
     results = get_predictions(processed_faces, model_83)
     names = get_unique_names_appearing_twice_or_more(results)
 
-    video_file = open(file_path, 'rb')
+    video_file = open(temp_video_path, 'rb')
     video_bytes = video_file.read()
 
     # Displying video
