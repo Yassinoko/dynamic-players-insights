@@ -26,7 +26,7 @@ If predicted, you can select multiple players to show their UCL 21/22 statistics
 ## Getting Started
 1. Clone the repository:
 
-'''git clone https://github.com/your-username/dynamic-players-insights.git
-cd dynamic-players-insights'''
+`git clone https://github.com/your-username/dynamic-players-insights.git`
+`cd dynamic-players-insights`
 
 2. Install the required dependencies: pip install -r requirements.txt
