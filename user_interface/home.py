@@ -50,19 +50,48 @@ st.image(img_path)
 
 st.markdown(
     f"""
-    ## The Art of the Game is in your hands
-    """
+    <h2 style='color: white;'>The Art of the Game is in your hands</h2>
+    """,
+    unsafe_allow_html=True
 )
+
 
 # Markdown in quote block
 st.markdown("""
-> Faces recognition during live games to display analysis statistics.
-""")
+    <h2 style='color: white;'>
+    > Faces recognition during live games to display statistics analysis.
+    """,
+   unsafe_allow_html=True)
 
-# Request user to input short video via file upload
+text_list = [
+    "The model is trained on recognizing the faces of 10 different players from both Real Madrid FC and Liverpool FC. The players are the following :",
+    "- Trend Alexander-Arnold",
+    "- Marco Asensio",
+    "- Karim Benzema",
+    "- Dani Carvajal",
+    "- Dani Ceballos",
+    "- Thibaut Courtois",
+    "- Lucas Henderson",
+    "- Lucas Vázquez",
+    "- Sadio Mané",
+    "- Mohamed Salah",
+    " ",
+    "The statistics are about the 21/22 UEFA Champions League season. If the model recognizes the faces of the video, statistics will be displayed below."
+]
+
+for text in text_list:
+    st.markdown(f"<p style='color: white;'>{text}</p>", unsafe_allow_html=True)
+
+st.markdown(
+    f"""
+    <p style='color: white;'>Upload a short video of your favorite highlight from the UCL 21/22</p>
+    """,
+    unsafe_allow_html=True
+)
+
 video = st.file_uploader(
-    "Upload a short video of your favorite highlight from the UCL 21/22", # user message
-    type=['mp4', 'mov'], # possible to add other video types
+    " ",
+    type=['mp4', 'mov']
 )
 
 # Reset file path
@@ -103,15 +132,34 @@ if video is not None:
     video_bytes = video_file.read()
 
     # Displying video
-    st.header("Uploaded video")
+    st.markdown(
+                f'<h1 style="color: white;">Uploaded Video</h1>',
+                unsafe_allow_html=True
+            )
     vid = st.video(video_bytes)
 
     # Remove gif
     # gif_display.empty()
 
-    # Player selection
-    st.header("Players from the video")
-    selected_data = st.multiselect("Select Players to compare", map(lambda x: x.upper(), names))
+    st.markdown(
+        f'<h1 style="color: white;">Players from the video</h1>',
+        unsafe_allow_html=True
+    )
+
+    # Converting names to uppercase for multiselect options
+    uppercase_names = list(map(lambda x: x.upper(), names))
+
+    # Using st.write to display styled text for each option
+    st.markdown(
+        f'<p style="color: white;">Select Players to compare</p>',
+        unsafe_allow_html=True
+    )
+
+    # Displaying the multiselect dropdown
+    selected_data = st.multiselect(
+        "",
+        uppercase_names
+)
     selected_data = map(lambda x: x.lower(), selected_data)
 
     # Displying graphs
@@ -138,7 +186,10 @@ if video is not None:
             for player in selected_data:
                 dict_pos[player_positions[player]].append(player)
 
-            st.header("Player Statistics")
+                st.markdown(
+                f'<h1 style="color: white;">Players Satistics</h1>',
+                unsafe_allow_html=True
+            )
 
             for pos, players in dict_pos.items():
                 if len(players) != 0:
