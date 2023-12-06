@@ -19,7 +19,7 @@ Dataset : https://www.kaggle.com/datasets/azminetoushikwasi/ucl-202122-uefa-cham
 
 ## Usage
 ### Upload video. 
-You can uploaed a < 200 MB. The model will then predict the faces. 
+You can uploaed a < 200 MB video on the app. The model will then predict the faces. 
 ### Display Stats
 If predicted, you can select multiple players to show their UCL 21/22 statistics.
 
