@@ -9,12 +9,20 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Contributors][contributors-shield]][https://github.com/cprite/dynamic-players-insights/graphs/contributors]
-[![Forks][forks-shield]][https://github.com/cprite/dynamic-players-insights/graphs/forks]
-[![Stargazers][stars-shield]][https://github.com/cprite/dynamic-players-insights/graphs/stars]
-[![Issues][issues-shield]][https://github.com/cprite/dynamic-players-insights/graphs/issues]
+[![Contributors][https://img.shields.io/github/contributors/cprite/dynamic-players-insights
+.svg?style=for-the-badge]][https://github.com/cprite/dynamic-players-insights
+/graphs/contributors]
+[![Forks][https://img.shields.io/github/forks/cprite/dynamic-players-insights
+.svg?style=for-the-badge]][https://github.com/cprite/dynamic-players-insights
+/network/members]
+[![Stargazers][https://img.shields.io/github/stars/cprite/dynamic-players-insights
+.svg?style=for-the-badge][https://github.com/cprite/dynamic-players-insights
+/stargazers]
+[![Issues][https://img.shields.io/github/issues/cprite/dynamic-players-insights
+.svg?style=for-the-badge]][https://github.com/cprite/dynamic-players-insights
+/issues]
 <!-- [![MIT License][license-shield]][license-url] -->
-[![LinkedIn][linkedin-shield]][https://www.linkedin.com/in/niknmirosh/]
+[![LinkedIn][https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555][https://www.linkedin.com/in/niknmirosh/]
 
 
 
